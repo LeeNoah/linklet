@@ -6,7 +6,9 @@
   "dependencies": {
     "wrangler": "^3.5.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "geoip-lite": "^1.4.2"
+  },
   "scripts": {
     "dev": "wrangler pages dev . --d1=short",
     "clear": "kill -9 $(pgrep workerd)",

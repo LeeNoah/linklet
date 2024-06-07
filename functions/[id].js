@@ -3,6 +3,8 @@
  */
 import page404 from './404.html'
 
+const geoip = require('geoip-lite');
+
 export async function onRequestGet(context) {
     const { request, env, params } = context;
     // const url = new URL(request.url);
@@ -41,9 +43,16 @@ export async function onRequestGet(context) {
             }
         });
     } else {
+        const ip_location = geoip.lookup(clientIP);
+        console.log(ip_location);
+        getGeoLocation(clientIP).then(location => {
+            if (location) {
+                console.log(location);
+            }
+          });
         try {
             const info = await env.DB.prepare(`INSERT INTO logs (url, source, channel, activity, slug, ip, ip_location, referer,  ua, create_time) 
-            VALUES ('${Url.url}', '${source}', '${channel}', '${activity}', '${slug}', '${clientIP}', '${clientIP}', '${Referer}', '${userAgent}', '${formattedDate}')`).run()
+            VALUES ('${Url.url}', '${source}', '${channel}', '${activity}', '${slug}', '${clientIP}', '${ip_location}', '${Referer}', '${userAgent}', '${formattedDate}')`).run()
             // console.log(info);
             return Response.redirect(Url.url, 302);
             
@@ -54,3 +63,15 @@ export async function onRequestGet(context) {
     }
 
 }
+
+async function getGeoLocation(ip) {
+    const apiUrl = `https://ipinfo.io/${ip}/json`;
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching geolocation:', error);
+      return null;
+    }
+  }
