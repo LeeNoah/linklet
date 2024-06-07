@@ -3,7 +3,9 @@
  */
 import page404 from './404.html'
 
-//const geoip = require('geoip-lite');
+// const geoip = require('geoip-lite');
+
+// import Geoip from 'geoip-lite';
 
 export async function onRequestGet(context) {
     const { request, env, params } = context;
@@ -43,15 +45,15 @@ export async function onRequestGet(context) {
             }
         });
     } else {
-        let ip_location = null;
         // const ip_location = geoip.lookup(clientIP);
-        // console.log(ip_location);
-        getGeoLocation(clientIP).then(location => {
-            if (location) {
-                console.log(location);
-                ip_location = location;
-            }
-          });
+        const ip_location = await getGeoLocation(clientIP);
+        console.log(ip_location);
+        // getGeoLocation(clientIP).then(location => {
+        //     if (location) {
+        //         console.log(location);
+        //         ip_location = location;
+        //     }
+        //   });
         try {
             const info = await env.DB.prepare(`INSERT INTO logs (url, source, channel, activity, slug, ip, ip_location, referer,  ua, create_time) 
             VALUES ('${Url.url}', '${source}', '${channel}', '${activity}', '${slug}', '${clientIP}', '${ip_location}', '${Referer}', '${userAgent}', '${formattedDate}')`).run()
@@ -67,13 +69,16 @@ export async function onRequestGet(context) {
 }
 
 async function getGeoLocation(ip) {
-    const apiUrl = `https://ipinfo.io/${ip}/json`;
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching geolocation:', error);
-      return null;
-    }
+    return new Promise(async (resolve,reject) => {
+        const apiUrl = `https://ipinfo.io/${ip}/json`;
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          resolve(data)
+        } catch (error) {
+          console.error('Error fetching geolocation:', error);
+          reject(null)
+        }
+    })
+    
   }
