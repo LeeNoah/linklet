@@ -3,7 +3,7 @@
  */
 import page404 from './404.html'
 
-const geoip = require('geoip-lite');
+//const geoip = require('geoip-lite');
 
 export async function onRequestGet(context) {
     const { request, env, params } = context;
@@ -43,8 +43,9 @@ export async function onRequestGet(context) {
             }
         });
     } else {
-        const ip_location = geoip.lookup(clientIP);
-        console.log(ip_location);
+        let ip_location = null;
+        // const ip_location = geoip.lookup(clientIP);
+        // console.log(ip_location);
         getGeoLocation(clientIP).then(location => {
             if (location) {
                 console.log(location);
