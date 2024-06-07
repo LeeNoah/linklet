@@ -49,6 +49,7 @@ export async function onRequestGet(context) {
         getGeoLocation(clientIP).then(location => {
             if (location) {
                 console.log(location);
+                ip_location = location;
             }
           });
         try {
