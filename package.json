@@ -4,11 +4,10 @@
   "description": "A URL Shortener created using Cloudflare Pages",
   "main": "index.js",
   "dependencies": {
-    "wrangler": "^3.5.1"
-  },
-  "devDependencies": {
+    "wrangler": "^3.5.1",
     "geoip-lite": "^1.4.2"
   },
+  "devDependencies": {},
   "scripts": {
     "dev": "wrangler pages dev . --d1=short",
     "clear": "kill -9 $(pgrep workerd)",
