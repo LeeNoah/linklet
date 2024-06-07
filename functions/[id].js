@@ -6,7 +6,7 @@ import page404 from './404.html'
 export async function onRequestGet(context) {
     const { request, env, params } = context;
     // const url = new URL(request.url);
-    const clientIP = request.headers.get("x-forwarded-for") || request.headers.get("clientIP");
+    const clientIP = request.headers.get("CF-Connecting-IP");
     const userAgent = request.headers.get("user-agent");
     const Referer = request.headers.get('Referer') || "Referer"
     const originurl = new URL(request.url);
