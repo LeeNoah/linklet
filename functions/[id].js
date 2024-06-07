@@ -10,6 +10,12 @@ export async function onRequestGet(context) {
     const userAgent = request.headers.get("user-agent");
     const Referer = request.headers.get('Referer') || "Referer"
     const originurl = new URL(request.url);
+    // 创建 URLSearchParams 对象，包含查询字符串
+    const queryParams = originurl.searchParams;
+    // 提取参数
+    const source = queryParams.get('source'); // 获取 source 参数的值
+    const channel = queryParams.get('channel'); // 获取 channel 参数的值
+    const activity = queryParams.get('activity'); // 获取 activity 参数的
     const options = {
         timeZone: 'Asia/Shanghai',
         year: 'numeric',
@@ -36,8 +42,8 @@ export async function onRequestGet(context) {
         });
     } else {
         try {
-            const info = await env.DB.prepare(`INSERT INTO logs (url, slug, ip,referer,  ua, create_time) 
-            VALUES ('${Url.url}', '${slug}', '${clientIP}','${Referer}', '${userAgent}', '${formattedDate}')`).run()
+            const info = await env.DB.prepare(`INSERT INTO logs (url, source, channel, activity, slug, ip, ip_location, referer,  ua, create_time) 
+            VALUES ('${Url.url}', '${source}', '${channel}', '${activity}', '${slug}', '${clientIP}', '${clientIP}', '${Referer}', '${userAgent}', '${formattedDate}')`).run()
             // console.log(info);
             return Response.redirect(Url.url, 302);
             

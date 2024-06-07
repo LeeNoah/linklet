@@ -11,11 +11,15 @@ CREATE TABLE IF NOT EXISTS links (
 DROP TABLE IF EXISTS logs;
 CREATE TABLE IF NOT EXISTS logs (
   `id` integer PRIMARY KEY NOT NULL,
-  `url` text ,
-  `slug` text,
-  `referer` text,
+  `url` string,
+  `source` string,
+  `channel` string,
+  `activity` string,
+  `slug` string,
+  `referer` string,
   `ua` text ,
-  `ip` text ,
+  `ip` string,
+  `ip_location` string,
   `create_time` DATE
 );
 
