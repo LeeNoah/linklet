@@ -74,10 +74,10 @@ async function getGeoLocation(ip) {
         try {
           const response = await fetch(apiUrl);
           const data = await response.json();
-          resolve(data)
+          resolve(data?.region || '')
         } catch (error) {
           console.error('Error fetching geolocation:', error);
-          reject(null)
+          resolve('')
         }
     })
     
