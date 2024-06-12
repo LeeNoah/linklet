@@ -98,7 +98,7 @@ export async function onRequest(context) {
         }
 
         // 目标 url 已存在
-        const existSlug = await env.DB.prepare(`SELECT slug as existSlug FROM links where url = '${url}'`).first()
+        const existSlug = await env.DB.prepare(`SELECT suffix as existSlug FROM links where url = '${url}'`).first()
 
         // url 存在且没有自定义 slug
         if (existSlug && !slug) {
