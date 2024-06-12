@@ -209,9 +209,21 @@
       <input placeholder="输入要缩短的网址..." x-model="url" x-ref="url" />
       <details>
         <summary>自定义设置</summary>
-        <div>
+        <!-- <div>
           <input placeholder="slug" x-model="slug" />
           <small>不设置则随机生成 slug</small>
+        </div> -->
+        <div>
+          <input placeholder="source" x-model="source" />
+          <small>KOL代号</small>
+        </div>
+        <div>
+          <input placeholder="channel" x-model="channel" />
+          <small>投放渠道，例如twitter, youtube</small>
+        </div>
+        <div>
+          <input placeholder="activity" x-model="activity" />
+          <small>活动代号，非必填</small>
         </div>
       </details>
       <button :class="{ loading }" :disabled="loading || isValidated()" @click="submit($refs, $nextTick)">生成</button>
@@ -224,6 +236,9 @@
       const app = {
         url: '',
         slug: '',
+        source: '',
+        channel: '',
+        activity: '',
         alert: null,
         loading: false,
         isValidated () {
@@ -245,6 +260,9 @@
 
           const body = { url: this.url }
           if (this.slug) body.slug = this.slug
+          if (this.source) body.source = this.source
+          if (this.channel) body.channel = this.channel
+          if (this.activity) body.activity = this.activity
 
           fetch('/create', {
             method: 'post',

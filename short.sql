@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS links;
 CREATE TABLE IF NOT EXISTS links (
   `id` integer PRIMARY KEY NOT NULL,
   `url` text,
-  `slug` text,
+  `suffix` text,
   `ua` text,
   `ip` text,
   `status` int,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS logs (
   `source` string,
   `channel` string,
   `activity` string,
-  `slug` string,
+  `suffix` string,
   `referer` string,
   `ua` text ,
   `ip` string,

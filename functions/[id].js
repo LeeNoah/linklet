@@ -55,7 +55,7 @@ export async function onRequestGet(context) {
         //     }
         //   });
         try {
-            const info = await env.DB.prepare(`INSERT INTO logs (url, source, channel, activity, slug, ip, ip_location, referer,  ua, create_time) 
+            const info = await env.DB.prepare(`INSERT INTO logs (url, source, channel, activity, suffix, ip, ip_location, referer,  ua, create_time) 
             VALUES ('${Url.url}', '${source}', '${channel}', '${activity}', '${slug}', '${clientIP}', '${ip_location}', '${Referer}', '${userAgent}', '${formattedDate}')`).run()
             // console.log(info);
             return Response.redirect(Url.url, 302);

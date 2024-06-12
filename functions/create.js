@@ -30,7 +30,7 @@ export async function onRequest(context) {
 // export async function onRequestPost(context) {
     const { request, env } = context;
     const originurl = new URL(request.url);
-    const clientIP = request.headers.get("x-forwarded-for") || request.headers.get("clientIP");
+    const clientIP = request.headers.get("x-forwarded-for") || request.headers.get("CF-Connecting-IP");
     const userAgent = request.headers.get("user-agent");
     const origin = `${originurl.protocol}//${originurl.hostname}`
 
@@ -46,7 +46,7 @@ export async function onRequest(context) {
     };
     const timedata = new Date();
     const formattedDate = new Intl.DateTimeFormat('zh-CN', options).format(timedata);
-    const { url, slug } = await request.json();
+    const { url, slug, source, channel, activity } = await request.json();
     const corsHeaders = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -82,7 +82,7 @@ export async function onRequest(context) {
 
             // url & slug 是一样的。
             if (existUrl && existUrl.existUrl === url) {
-                return Response.json({ slug, link: `${origin}/${slug2}` },{
+                return Response.json({ slug, link: `${origin}/${slug}` },{
                     headers: corsHeaders,
                     status: 200
                 })
@@ -117,12 +117,37 @@ export async function onRequest(context) {
             })
         }
 
-        // 生成随机slug
-        const slug2 = slug ? slug : generateRandomString(4);
-        // console.log('slug', slug2);
+        let slug2 = slug;
+        if (!slug) {
+            // 生成随机slug
+            slug2 = generateRandomString(4);
+            // console.log('slug', slug2);
 
-        const info = await env.DB.prepare(`INSERT INTO links (url, slug, ip, status, ua, create_time) 
+            // 校验slug不重复
+            const newExistUrl = await env.DB.prepare(`SELECT url as existUrl FROM links where slug = '${slug2}'`).first()
+            if (newExistUrl && newExistUrl.existUrl !== url) {
+                return Response.json({ message: 'Slug random repeat, please try again' },{
+                    headers: corsHeaders,
+                    status: 400  
+                })
+            }
+        }
+        
+
+        const info = await env.DB.prepare(`INSERT INTO links (url, suffix, ip, status, ua, create_time) 
         VALUES ('${url}', '${slug2}', '${clientIP}',1, '${userAgent}', '${formattedDate}')`).run()
+
+        let linkSuffix = '';
+
+        if (source) {
+            linkSuffix += `?source=${source}`;
+        }
+        if (channel) {
+            linkSuffix += `${linkSuffix ? '&' : '?'}channel=${channel}`;
+        }
+        if (activity) {
+            linkSuffix += `${linkSuffix ? '&' : '?'}activity=${activity}`;
+        }
 
         return Response.json({ slug: slug2, link: `${origin}/${slug2}` },{
             headers: corsHeaders,
