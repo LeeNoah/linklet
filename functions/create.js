@@ -73,16 +73,25 @@ export async function onRequest(context) {
 
 
 
+    let linkSuffix = '';
+    if (source) {
+        linkSuffix += `?source=${source}`;
+    }
+    if (channel) {
+        linkSuffix += `${linkSuffix ? '&' : '?'}channel=${channel}`;
+    }
+    if (activity) {
+        linkSuffix += `${linkSuffix ? '&' : '?'}activity=${activity}`;
+    }
 
     try {
-
         // 如果自定义slug
         if (slug) {
             const existUrl = await env.DB.prepare(`SELECT url as existUrl FROM links where suffix = '${slug}'`).first()
 
             // url & slug 是一样的。
             if (existUrl && existUrl.existUrl === url) {
-                return Response.json({ slug, link: `${origin}/${slug}` },{
+                return Response.json({ slug, link: `${origin}/${slug}${linkSuffix}` },{
                     headers: corsHeaders,
                     status: 200
                 })
@@ -102,7 +111,7 @@ export async function onRequest(context) {
 
         // url 存在且没有自定义 slug
         if (existSlug && !slug) {
-            return Response.json({ slug: existSlug.existSlug, link: `${origin}/${existSlug.existSlug}` },{
+            return Response.json({ slug: existSlug.existSlug, link: `${origin}/${existSlug.existSlug}${linkSuffix}` },{
                 headers: corsHeaders,
                 status: 200
             
@@ -136,18 +145,6 @@ export async function onRequest(context) {
 
         const info = await env.DB.prepare(`INSERT INTO links (url, suffix, ip, status, ua, create_time) 
         VALUES ('${url}', '${slug2}', '${clientIP}',1, '${userAgent}', '${formattedDate}')`).run()
-
-        let linkSuffix = '';
-
-        if (source) {
-            linkSuffix += `?source=${source}`;
-        }
-        if (channel) {
-            linkSuffix += `${linkSuffix ? '&' : '?'}channel=${channel}`;
-        }
-        if (activity) {
-            linkSuffix += `${linkSuffix ? '&' : '?'}activity=${activity}`;
-        }
 
         return Response.json({ slug: slug2, link: `${origin}/${slug2}${linkSuffix}` },{
             headers: corsHeaders,
