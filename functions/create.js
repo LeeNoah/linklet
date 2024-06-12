@@ -78,7 +78,7 @@ export async function onRequest(context) {
 
         // 如果自定义slug
         if (slug) {
-            const existUrl = await env.DB.prepare(`SELECT url as existUrl FROM links where slug = '${slug}'`).first()
+            const existUrl = await env.DB.prepare(`SELECT url as existUrl FROM links where suffix = '${slug}'`).first()
 
             // url & slug 是一样的。
             if (existUrl && existUrl.existUrl === url) {
@@ -124,7 +124,7 @@ export async function onRequest(context) {
             // console.log('slug', slug2);
 
             // 校验slug不重复
-            const newExistUrl = await env.DB.prepare(`SELECT url as existUrl FROM links where slug = '${slug2}'`).first()
+            const newExistUrl = await env.DB.prepare(`SELECT url as existUrl FROM links where suffix = '${slug2}'`).first()
             if (newExistUrl && newExistUrl.existUrl !== url) {
                 return Response.json({ message: 'Slug random repeat, please try again' },{
                     headers: corsHeaders,

@@ -35,7 +35,7 @@ export async function onRequestGet(context) {
 
     const slug = params.id;
 
-    const Url = await env.DB.prepare(`SELECT url FROM links where slug = '${slug}'`).first()
+    const Url = await env.DB.prepare(`SELECT url FROM links where suffix = '${slug}'`).first()
 
     if (!Url) {
         return new Response(page404, {
