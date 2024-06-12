@@ -149,7 +149,7 @@ export async function onRequest(context) {
             linkSuffix += `${linkSuffix ? '&' : '?'}activity=${activity}`;
         }
 
-        return Response.json({ slug: slug2, link: `${origin}/${slug2}` },{
+        return Response.json({ slug: slug2, link: `${origin}/${slug2}${linkSuffix}` },{
             headers: corsHeaders,
             status: 200
         })
