@@ -75,13 +75,13 @@ export async function onRequest(context) {
 
     let linkSuffix = '';
     if (source) {
-        linkSuffix += `?source=${source}`;
+        linkSuffix += `?kid=${source}`;
     }
     if (channel) {
-        linkSuffix += `${linkSuffix ? '&' : '?'}channel=${channel}`;
+        linkSuffix += `${linkSuffix ? '&' : '?'}src=${channel}`;
     }
     if (activity) {
-        linkSuffix += `${linkSuffix ? '&' : '?'}activity=${activity}`;
+        linkSuffix += `${linkSuffix ? '&' : '?'}act=${activity}`;
     }
 
     try {
