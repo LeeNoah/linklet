@@ -12,9 +12,9 @@ DROP TABLE IF EXISTS logs;
 CREATE TABLE IF NOT EXISTS logs (
   `id` integer PRIMARY KEY NOT NULL,
   `url` string,
-  `source` string,
-  `channel` string,
-  `activity` string,
+  `kid` string,
+  `src` string,
+  `act` string,
   `suffix` string,
   `referer` string,
   `ua` text ,
